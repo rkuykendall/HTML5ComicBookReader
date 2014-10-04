@@ -1,0 +1,1 @@
+PageModel = Backbone.Model.extend({});

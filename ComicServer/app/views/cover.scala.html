@@ -1,0 +1,11 @@
+@* cover Template File *@
+@(source: String)(name: String)(comicBookId:java.lang.Integer)
+
+<div class = "cover-container thumbnail">
+    <a href="/reader/@comicBookId/">
+        <img class="img-cover" src = "@source" alt="@name")"></src>
+        <div class="caption">
+            <span>@name</span>
+        </div>
+    </a>
+</div>

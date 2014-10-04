@@ -1,0 +1,2 @@
+ComicModel = Backbone.Model.extend({});
+

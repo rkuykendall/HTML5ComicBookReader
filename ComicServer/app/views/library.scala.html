@@ -1,0 +1,22 @@
+@(model: ComicBooks)
+
+@import java.net.URLEncoder;
+@import models.ComicBooks;
+
+@main("Web Slinger Comic Reader"){
+
+} {
+
+<div class="row">
+    @for(book <- model.books){
+    <div class="col-xs-12 col-md-2">
+			<span>
+			    @cover("/page/"+book.id+"/"+book.coverIndex+"/")(book.fileName)(book.id)
+            </span>
+    </div>
+
+    }
+</div>
+
+}
+

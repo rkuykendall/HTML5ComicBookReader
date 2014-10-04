@@ -1,0 +1,41 @@
+COMIC BOOK SERVER
+===
+
+Library
+ * Import
+ * Parse
+ * Metadata
+Reader
+ * display
+
+
+MVC
+
+Models
+ * ComicBook
+ * Collection <ComicBook>
+   - Library
+   - Reading Lists
+
+Views
+ * Reader
+   - takes a ComicBook
+ * Library View
+   - taks a Collection<ComicBook>
+
+Controller
+ * Main
+
+AppCode
+ * DB interface
+   - read ComicBooks and Collections metadata from DB
+ * FileReader read comic book files from disk
+
+
+Routes
+  / Home Page
+    - recent reads
+    - newly added
+  / Library
+  / Read
+

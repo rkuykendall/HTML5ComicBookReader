@@ -1,0 +1,30 @@
+@(json: String)
+
+@main("Web Slinger Comic Reader"){
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <script src="@routes.Assets.at("javascripts/jquery.hotkeys.js")"></script>
+
+    <script src="@routes.Assets.at("javascripts/zip.js")"></script>
+    <script src="@routes.Assets.at("javascripts/deflate.js")"></script>
+    
+    
+    
+    
+    <script type="text/javascript">
+		var comicJson = @Html(json);
+    </script>
+    
+    <script src="@routes.Assets.at("javascripts/reader.js")"></script>
+    
+
+
+} {
+      <div id="comicImages">
+      </div>
+}

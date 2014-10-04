@@ -1,0 +1,110 @@
+@(json: String)
+
+@main("Web Slinger Comic Reader"){
+
+    <script src="@routes.Assets.at("javascripts/jquery.hotkeys.js")"></script>
+    <script src="@routes.Assets.at("backbone.marionette/underscore.js")"></script>
+    <script src="@routes.Assets.at("backbone.marionette/backbone.js")"></script>
+    <script src="@routes.Assets.at("backbone.marionette/backbone.marionette.js")"></script>
+    <script src="@routes.Assets.at("appscripts/app.js")"></script>
+    <script src="@routes.Assets.at("appscripts/Models/ComicModel.js")"></script>
+    <script src="@routes.Assets.at("appscripts/Models/LibraryModel.js")"></script>
+    <script src="@routes.Assets.at("appscripts/Views/ComicView.js")"></script>
+    <script src="@routes.Assets.at("appscripts/Views/LibraryView.js")"></script>
+    <script src="@routes.Assets.at("appscripts/Models/FileModel.js")"></script>
+    <script src="@routes.Assets.at("appscripts/Views/AddView.js")"></script>
+    <script src="@routes.Assets.at("appscripts/Views/SideBarView.js")"></script>
+    <script src="@routes.Assets.at("appscripts/Views/PageView.js")"></script>
+    <script src="@routes.Assets.at("appscripts/Views/ReaderView.js")"></script>
+    <script src="@routes.Assets.at("appscripts/Models/PageModel.js")"></script>
+    <script src="@routes.Assets.at("appscripts/Models/PageCollection.js")"></script>
+
+    <script type="text/template" id ="LibraryTemplate">
+        <div class="row" id="LibraryView">
+        </div>
+    </script>
+
+    <script type="text/template" id="ComicTemplate">
+        <div class="col-xs-12 col-md-2 cover-box">
+                    <span>
+                        <div class = "cover-container thumbnail">
+                            <a href="#reader/<%= id %>/">
+                                <img class="img-cover" src = "/page/<%=id%>/<%=coverIndex%>/" alt="<%=fileName%>"></src>
+                                <div class="caption">
+                                    <span><%=fileName%></span>
+                                </div>
+                            </a>
+                        </div>
+                </span>
+        </div>
+    </script>
+
+    <script type="text/template" id="SideBarTemplate">
+        <div class="side-bar transition-out ">
+            <ul class = "nav nav-pills nav-stacked" id="SideBarItems">
+                <li><a class="" href="#">Home</a></li>
+                <li><a class="" href="#library">Library</a></li>
+                <li><a class="" href="#reader">Reader</a></li>
+            </ul>
+        </div>
+
+    </script>
+
+    <script type="text/template" id="AddTemplate">
+
+        <div class="modal-dialog">
+            <div class = "modal-content">
+                <div class="modal-header">
+                    <span><h2><%= directory %></h2></span>
+                </div>
+                <div class="modal-body">
+                <div class = "addFolderContainer">
+                <h3>directories</h3>
+                  <ul class = "nav nav-pills nav-stacked ">
+                    <% if(parent){ %>
+                      <li class="addFolderRow" dir="<%=parent%>"><a><i class="glyphicon glyphicon-folder-open"/> .. </a> </li>
+                    <% }%>
+                    <% _.each(directories, function(dir){ %>
+                    <li class="addFolderRow" dir="<%=directory+'/'+dir%>"><a><i class="glyphicon glyphicon-folder-open"/> <%=dir%></a> </li>
+                    <% }); %>
+                  </ul>
+                 </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button id="addDirectoryButton" type="button" class="btn btn-primary" dir="<%=directory%>">Add Directory</button>
+                </div>
+            </div>
+        </div>
+
+    </script>
+
+    <script type="text/template" id="ReaderTemplate">
+        <div id="comicImages">
+
+        </div>
+    </script>
+
+    <script type="text/template" id="PageTemplate">
+        <img id="page-<%=id%>" src="/page/<%=comicBookId%>/<%=id%>/"></img>
+
+    </script>
+
+    <script type="text/javascript">
+		var libraryJson = @Html(json);
+        $(document).ready(function(){
+            var library = new LibraryModel(libraryJson.books);
+            app.start({library: library});
+        });
+    </script>
+
+} {
+
+
+
+
+
+
+
+}
