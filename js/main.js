@@ -10,7 +10,55 @@ function errorHandler(e) {
   console.dir(e);
 }
 
+function getSearchParameters() {
+      var prmstr = window.location.search.substr(1);
+      return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
+}
+
+function transformToAssocArray( prmstr ) {
+    var params = {};
+    var prmarr = prmstr.split("&");
+    for ( var i = 0; i < prmarr.length; i++) {
+        var tmparr = prmarr[i].split("=");
+        params[tmparr[0]] = tmparr[1];
+    }
+    return params;
+}
+
 function init() {
+  var params = getSearchParameters();
+  
+  if(params['library'] !== undefined) {
+    var modalString = 'Downloading comic from library.';
+    $("#statusModalText").html(modalString);
+    $("#statusModal").modal({keyboard:false});
+
+    console.log('Library = '+params['library']);
+    // Get file from library
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'library/'+params['library'], true);
+    xhr.responseType = 'blob';
+    xhr.onprogress = function(e) {
+      var done = e.position || e.loaded;
+      var total = e.totalSize || e.total;
+      var present = Math.floor(done / total * 100);
+      
+      var pString = 'Downloading comic from library.';
+          pString += '<div class="progress progress-striped active">';
+          pString += '<div class="bar" style="width: '+present+'%;"></div>';
+          pString += '</div>';
+          $("#statusModalText").html(pString);
+    };
+    xhr.onload = function(e) {
+      if (this.status == 200) {
+        var myBlob = this.response;
+        handleFile(myBlob);
+      }
+    };
+    xhr.send();
+  }
+    
+  // Upload file
   window.webkitStorageInfo.requestQuota(window.TEMPORARY, 20*1024*1024, function(grantedBytes) {
     window.webkitRequestFileSystem(window.TEMPORARY, grantedBytes, onInitFs, errorHandler);
   }, errorHandler);
@@ -20,7 +68,6 @@ function init() {
 function onInitFs(fs) {
   dir = fs.root;
   $(document).on("dragover", dragOverHandler);
-
   $(document).on("drop", dropHandler);
   console.log('onInitFs done, new');
 }
@@ -139,7 +186,17 @@ function handleFile(file) {
                 $("#singlePage").on("click",singleSpread);
                 $(document).bind('keydown', 's', singleSpread);
 
-                spread(1); // drawPanel(0);
+                var i = null;
+                $("body").mousemove(function() {
+                    clearTimeout(i);
+                    $("#navbar").fadeIn();
+                    i = setTimeout('$("#navbar").fadeOut();', 1000);
+                }).mouseleave(function() {
+                    clearTimeout(i);
+                    $("#navbar").hide();  
+                });
+
+                singleSpread();
               }
             });
           }, errorHandler);
@@ -155,7 +212,6 @@ function handleFile(file) {
 
 function drawPanel(num) {
   curPanel = num;
-
 
   $("#comicImages img").each(function( index ) {
     if (num+index >= images.length || num+index < 0) {
@@ -178,6 +234,7 @@ function nextPanel() {
 }
 
 function fitHorizontal() {
+  $("#comicImages").removeClass();
   $("#comicImages img").removeClass();
   $("#comicImages img").addClass('fitHorizontal');
 }
@@ -185,13 +242,14 @@ function fitHorizontal() {
 function fitVertical() {
   $("#comicImages img").removeClass();
   $("#comicImages img").addClass('fitVertical');
+  $("#comicImages").addClass('fit');
+  
 }
 function fitBoth() {
   $("#comicImages img").removeClass();
   $("#comicImages img").addClass('fitBoth');
+  $("#comicImages").addClass('fit');
 }
-
-
 
 function singleSpread() { $("#singlePage").parent().hide(); $("#fullSpread").parent().show(); spread(1); }
 function fullSpread()   { $("#singlePage").parent().show(); $("#fullSpread").parent().hide(); spread(2); }

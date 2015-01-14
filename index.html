@@ -30,7 +30,7 @@
         font-family: "Open Sans", Helvetica, Arial, Sans-serif;
       }
       body {
-        background: #171717 url('html5_logo.png') no-repeat bottom right;
+        background: #111 url('html5_logo.png') no-repeat bottom right;
         background-size: 256px 256px;
         color: #999;
       }
@@ -46,12 +46,11 @@
       #introText {
         margin-top: 100px;
       }
+      .fit {
+        height: 100vh;
+      }
       .fitVertical {
-        height: 100%;
-        height: -moz-calc(100% - 41px);
-        height: -webkit-calc(100% - 41px);
-        height: calc(100% - 41px);
-        
+        height: 100%;        
         width: auto;
       }
       .spread2 .fitHorizontal {
@@ -67,10 +66,7 @@
         width: auto;
         height: auto;
         max-height: 100%;
-        max-height: -moz-calc(100% - 41px);
-        max-height: -webkit-calc(100% - 41px);
-        max-height: calc(100% - 41px);
-        }
+      }
         .spread1 .fitBoth {
           max-width: 100%;
         }
@@ -81,16 +77,10 @@
 </head>
     
 <body onload="init()">
-    <div class="navbar navbar-inverse navbar-static-top">
+    <div id="navbar" class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          
-          <a class="brand" href="#">Web Slinger Comic Reader</a>
+        <div class="container">          
+          <a class="brand" href="#">Web Slinger</a>
           
           <div class="nav-collapse collapse">
           <ul class="nav">
@@ -124,7 +114,7 @@
   
       <div class="modal hide" id="statusModal">
         <div class="modal-header">
-          <h3>Uploading your comic.</h3>
+          <h3>Loading your comic.</h3>
         </div>
         <div class="modal-body">
           <p id="statusModalText"></p>
