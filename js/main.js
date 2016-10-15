@@ -25,39 +25,47 @@ function transformToAssocArray( prmstr ) {
     return params;
 }
 
+function fromUrl(url) {
+  var modalString = 'Downloading comic from URL.';
+  $("#statusModalText").html(modalString);
+  $("#statusModal").modal({keyboard:false});
+
+  console.log('URL = '+url);
+  // Get file from library
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.responseType = 'blob';
+  xhr.onprogress = function(e) {
+    var done = e.position || e.loaded;
+    var total = e.totalSize || e.total;
+    var present = Math.floor(done / total * 100);
+
+    var pString = 'Downloading comic from URL.';
+        pString += '<div class="progress progress-striped active">';
+        pString += '<div class="bar" style="width: '+present+'%;"></div>';
+        pString += '</div>';
+        $("#statusModalText").html(pString);
+  };
+  xhr.onload = function(e) {
+    if (this.status == 200) {
+      var myBlob = this.response;
+      handleFile(myBlob);
+    }
+  };
+  xhr.send();
+}
+
 function init() {
   var params = getSearchParameters();
-  
-  if(params['library'] !== undefined) {
-    var modalString = 'Downloading comic from library.';
-    $("#statusModalText").html(modalString);
-    $("#statusModal").modal({keyboard:false});
 
-    console.log('Library = '+params['library']);
-    // Get file from library
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'library/'+params['library'], true);
-    xhr.responseType = 'blob';
-    xhr.onprogress = function(e) {
-      var done = e.position || e.loaded;
-      var total = e.totalSize || e.total;
-      var present = Math.floor(done / total * 100);
-      
-      var pString = 'Downloading comic from library.';
-          pString += '<div class="progress progress-striped active">';
-          pString += '<div class="bar" style="width: '+present+'%;"></div>';
-          pString += '</div>';
-          $("#statusModalText").html(pString);
-    };
-    xhr.onload = function(e) {
-      if (this.status == 200) {
-        var myBlob = this.response;
-        handleFile(myBlob);
-      }
-    };
-    xhr.send();
+  if(params['url'] !== undefined) {
+    fromUrl(params['url']);
   }
-    
+
+  if(params['library'] !== undefined) {
+    fromUrl('library/'+params['library']);
+  }
+
   // Upload file
   window.webkitStorageInfo.requestQuota(window.TEMPORARY, 20*1024*1024, function(grantedBytes) {
     window.webkitRequestFileSystem(window.TEMPORARY, grantedBytes, onInitFs, errorHandler);
@@ -131,7 +139,7 @@ function handleFile(file) {
       $("#statusModal").modal({keyboard:false});
 
       entries.forEach(function(entry) {
-        
+
         if(!entry.directory && entry.filename.indexOf(".jpg") != -1) {
 
           //rewrite w/o a path
@@ -141,7 +149,7 @@ function handleFile(file) {
           dir.getFile(cleanName, {create:true}, function(file) {
             console.log("Yes, I opened "+file.fullPath);
             images.push({path:file.toURL(), loaded:false})
-  
+
             entry.getData(new zip.FileWriter(file), function(e) {
               done++;
               var perc = Math.floor((done/images.length)*100);
@@ -193,7 +201,7 @@ function handleFile(file) {
                     i = setTimeout('$("#navbar").fadeOut();', 1000);
                 }).mouseleave(function() {
                     clearTimeout(i);
-                    $("#navbar").hide();  
+                    $("#navbar").hide();
                 });
 
                 singleSpread();
@@ -243,7 +251,7 @@ function fitVertical() {
   $("#comicImages img").removeClass();
   $("#comicImages img").addClass('fitVertical');
   $("#comicImages").addClass('fit');
-  
+
 }
 function fitBoth() {
   $("#comicImages img").removeClass();
@@ -267,5 +275,3 @@ function spread(num) {
   drawPanel(curPanel);
   fitBoth();
 }
-
-
